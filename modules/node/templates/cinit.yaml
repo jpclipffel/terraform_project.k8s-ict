@@ -1,0 +1,35 @@
+#cloud-config
+
+users:
+  - name: ansctl
+    gecos: ansctl
+    lock_passwd: false
+    plain_text_passwd: ansctl
+    groups: sudo, users, admin
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+
+disable_root: true
+ssh_pwauth: yes
+
+write_files:
+  - path: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+    content: |
+      network: { config: disabled }
+  - path: /etc/netplan/50-cloud-init.yaml
+    content: |
+      network:
+        version: 2
+        ethernets:
+          ens192:
+            addresses:
+              - 172.29.42.2${instance}/24
+            gateway4: 172.29.42.1
+            nameservers:
+              addresses:
+                - 172.29.245.1
+              search:
+                - dt.ept.lu
+
+runcmd:
+- netplan apply
