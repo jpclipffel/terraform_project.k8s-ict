@@ -6,9 +6,57 @@ data "vsphere_datacenter" "default" {
   name = var.vsphere_datacenter
 }
 
-# Default datastore
+# Default datastore cluster
 data "vsphere_datastore_cluster" "default" {
   name          = "DATI : ICT"
+  datacenter_id = data.vsphere_datacenter.default.id
+}
+
+# Kirchberg datastore 01
+data "vsphere_datastore" "kirchberg_01" {
+  name          = "iaas-001-ict-klp-ds01"
+  datacenter_id = data.vsphere_datacenter.default.id
+}
+
+# Kirchberg datastore 02
+data "vsphere_datastore" "kirchberg_02" {
+  name          = "iaas-001-ict-klp-ds02"
+  datacenter_id = data.vsphere_datacenter.default.id
+}
+
+# Kirchberg datastore 03
+data "vsphere_datastore" "kirchberg_03" {
+  name          = "iaas-001-ict-klp-ds03"
+  datacenter_id = data.vsphere_datacenter.default.id
+}
+
+# Gare datastore 01
+data "vsphere_datastore" "gare_01" {
+  name          = "iaas-001-ict-glp-ds01"
+  datacenter_id = data.vsphere_datacenter.default.id
+}
+
+# Gare datastore 02
+data "vsphere_datastore" "gare_02" {
+  name          = "iaas-001-ict-glp-ds02"
+  datacenter_id = data.vsphere_datacenter.default.id
+}
+
+# Gare datastore 03
+data "vsphere_datastore" "gare_03" {
+  name          = "iaas-001-ict-glp-ds03"
+  datacenter_id = data.vsphere_datacenter.default.id
+}
+
+# Gare datastore 04
+data "vsphere_datastore" "gare_04" {
+  name          = "iaas-001-ict-glp-ds04"
+  datacenter_id = data.vsphere_datacenter.default.id
+}
+
+# Gare datastore 05
+data "vsphere_datastore" "gare_05" {
+  name          = "iaas-001-ict-glp-ds05"
   datacenter_id = data.vsphere_datacenter.default.id
 }
 

@@ -2,9 +2,15 @@
 
 
 variable "instances" {
-  description = "Number or instances (== count)"
+  description = "Number or instances (the 'count' meta-argument)"
   type        = number
   default     = 1
+}
+
+variable "seek" {
+  description = "The 'count' meta-argument seeking"
+  type        = number
+  default     = 0
 }
 
 variable "name_template" {
@@ -18,8 +24,13 @@ variable "resource_pool_id" {
   type        = string
 }
 
-variable "datastore_cluster_id" {
-  description = "The datastore cluster ID"
+# variable "datastore_cluster_id" {
+#   description = "The datastore cluster ID"
+#   type        = string
+# }
+
+variable "datastore_id" {
+  description = "The datastore ID"
   type        = string
 }
 

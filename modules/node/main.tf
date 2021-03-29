@@ -4,9 +4,10 @@
 resource "vsphere_virtual_machine" "node" {
   count                = var.instances
 
-  name                 = format(var.name_template, count.index + 1)
+  name                 = format(var.name_template, count.index + var.seek)
   resource_pool_id     = var.resource_pool_id
-  datastore_cluster_id = var.datastore_cluster_id
+  # datastore_cluster_id = var.datastore_cluster_id
+  datastore_id         = var.datastore_id
   folder               = var.vm_folder
   num_cpus             = var.num_cpus
   num_cores_per_socket = var.num_cpus
@@ -30,8 +31,10 @@ resource "vsphere_virtual_machine" "node" {
 
   # System disk
   disk {
-    label = var.disk_system_label
-    size  = var.disk_system_size
+    label            = var.disk_system_label
+    size             = var.disk_system_size
+    thin_provisioned = false
+    eagerly_scrub    = false
   }
 
   # Cloud-init cdrom
@@ -42,8 +45,8 @@ resource "vsphere_virtual_machine" "node" {
   # Cloud-init configuration
   vapp {
     properties ={
-      hostname = format(var.name_template, count.index + 1)
-      user-data = base64encode(templatefile("${path.module}/templates/cinit.yaml", { instance = count.index + 1 }))
+      hostname = format(var.name_template, count.index + var.seek)
+      user-data = base64encode(templatefile("${path.module}/templates/cinit.yaml", { instance = count.index + var.seek}))
     }
   }
 }
