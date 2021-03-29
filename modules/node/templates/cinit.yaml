@@ -30,6 +30,9 @@ write_files:
                 - 172.29.245.1
               search:
                 - dt.ept.lu
+          ens224:
+              addresses:
+              - 172.29.43.2${instance}/24
 
 runcmd:
 - netplan apply
