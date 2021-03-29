@@ -2,11 +2,12 @@
 
 
 resource "vsphere_virtual_machine" "node" {
+  # Meta
   count                = var.instances
 
-  name                 = format(var.name_template, count.index + var.seek)
+  # General
+  name                 = format(var.name_template, count.index + var.name_seek)
   resource_pool_id     = var.resource_pool_id
-  # datastore_cluster_id = var.datastore_cluster_id
   datastore_id         = var.datastore_id
   folder               = var.vm_folder
   num_cpus             = var.num_cpus
@@ -21,12 +22,12 @@ resource "vsphere_virtual_machine" "node" {
 
   # Primary network interface (server network / management)
   network_interface {
-    network_id = var.network_id_server
+    network_id = var.network_server_id
   }
 
   # Secondary network interface (client network / IPs pool)
   network_interface {
-    network_id = var.network_id_client
+    network_id = var.network_client_id
   }
 
   # System disk
@@ -45,8 +46,21 @@ resource "vsphere_virtual_machine" "node" {
   # Cloud-init configuration
   vapp {
     properties ={
-      hostname = format(var.name_template, count.index + var.seek)
-      user-data = base64encode(templatefile("${path.module}/templates/cinit.yaml", { instance = count.index + var.seek}))
+      hostname = format(var.name_template, count.index + var.name_seek)
+      user-data = base64encode(
+        templatefile(
+          "${path.module}/templates/cinit.yaml", {
+            hostname           = format(var.name_template, count.index + var.name_seek)
+            network_server_ips = var.network_server_ips,
+            network_client_ips = var.network_client_ips
+          }
+        )
+      )
     }
   }
+
+  lifecycle {
+    ignore_changes = [disk]
+  }
+
 }

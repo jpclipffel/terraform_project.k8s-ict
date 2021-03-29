@@ -1,5 +1,8 @@
 # code: language=Terraform tabSize=2
 
+# =============================================================================
+# Meta
+# =============================================================================
 
 variable "instances" {
   description = "Number or instances (the 'count' meta-argument)"
@@ -7,11 +10,15 @@ variable "instances" {
   default     = 1
 }
 
-variable "seek" {
-  description = "The 'count' meta-argument seeking"
+variable "name_seek" {
+  description = "Increment name when using count (count + name_seek)"
   type        = number
   default     = 0
 }
+
+# =============================================================================
+# General
+# =============================================================================
 
 variable "name_template" {
   description = "Instance name template"
@@ -59,13 +66,30 @@ variable "template_uuid" {
   type        = string
 }
 
-variable "network_id_server" {
+# =============================================================================
+# Networks
+# =============================================================================
+
+variable "network_server_id" {
   description = "The ID of the server (management) network"
 }
 
-variable "network_id_client" {
+variable "network_server_ips" {
+  description = "Static IP addresses on the server (management) network"
+}
+
+variable "network_client_id" {
   description = "The ID of the client (IP pool) network"
 }
+
+variable "network_client_ips" {
+  description = "Static IP addresses on the client (IP pool) network"
+}
+
+# =============================================================================
+# Disk
+# =============================================================================
+
 
 variable "disk_system_label" {
   description = "The system disk name (label)"
