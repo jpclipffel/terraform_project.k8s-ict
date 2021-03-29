@@ -1,5 +1,9 @@
 #cloud-config
 
+# =====================================================================
+# Users, authentication and misc.
+# =====================================================================
+
 users:
   - name: ansctl
     gecos: ansctl
@@ -11,28 +15,42 @@ users:
 
 disable_root: true
 ssh_pwauth: yes
+hostname: ${hostname}
+
+# =====================================================================
+# Config-time setup
+# =====================================================================
 
 write_files:
+  # Disable automatic Netplan configuration
   - path: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
     content: |
       network: { config: disabled }
+  # Custom Netplan configuration
   - path: /etc/netplan/50-cloud-init.yaml
     content: |
-      network:
-        version: 2
-        ethernets:
-          ens192:
-            addresses:
-              - 172.29.42.2${instance}/24
-            gateway4: 172.29.42.1
-            nameservers:
-              addresses:
-                - 172.29.245.1
-              search:
-                - dt.ept.lu
-          ens224:
-              addresses:
-              - 172.29.43.2${instance}/24
+        network:
+            version: 2
+            ethernets:
+                ens192:
+                    addresses:
+                        - ${network_server_ips[hostname]}
+                    gateway4: 172.29.42.1
+                    nameservers:
+                        addresses:
+                            - 172.29.245.1
+                        search:
+                            - dt.ept.lu
+                ens224:
+                    addresses:
+                        - ${network_client_ips[hostname]}
+
+# =====================================================================
+# Run-time setup
+# =====================================================================
 
 runcmd:
+# Apply Netplan configuration
 - netplan apply
+# Set hostname
+- hostnamectl set-hostname ${hostname}
